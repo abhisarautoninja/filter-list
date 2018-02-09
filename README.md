@@ -19,16 +19,14 @@ $ npm start
 
 $ go to [http://localhost:8080](http://localhost:8080) in your browser.
 ```
-### Snapshot
+### Auto Complete feature
 ![Alt text](https://raw.github.com/abhisarautoninja/filter-list/master/autocomp.png?raw=true "Optional Title")
-
-
+### Autocomplete
+![Alt text](https://raw.github.com/abhisarautoninja/filter-list/master/filter.png?raw=true "Optional Title")
+### Sorting Feature
+![Alt text](https://raw.github.com/abhisarautoninja/filter-list/master/sort.png?raw=true "Optional Title")
 
 ### Sample data  
-```
-> Each object must have ("id","children") rest other keys are optional.
-> All the "id" values must be unique.
-```
 ```
 [  
    {  
