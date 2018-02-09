@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="list-filter.css"></link>
+    <script src="list-filter.js"></script>
+</head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body ng-app="myapp">
+    <div ng-controller="HelloController as vm">
+        <div ng-click="vm.hideSearch()">
+            <div class="myapp">
+                <div class="card">
+                    <h2><i class="fa fa-hand-spock-o"></i> &nbsp;My Projects</h2>
+                    <div class="container">
+                        <h4><b>Search Bar</b></h4>
+                        <div class="row">
+                            <div class="col-xs-6 col-xs-offset-3">
+                                <input class="searchinput" type="text" ng-model="vm.search" ng-keyup="vm.populateSearchAutofill();" placeholder="Search for names.." title="Type in a name">
+                                <div class="search-container">
+                                    <div ng-repeat="entry in vm.searchResults">
+                                        <div class="search-suggestions" ng-click="vm.showSelected(entry);">{{entry.title}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="dropdown">
+                                <button class="dropbtn" ng-click="vm.clearSearch()">Clear Search & Revert List</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding:10px">
+                <div class="col-xs-12 col-md-4 pull-right">
+                    <div class="card">
+                        <div class="container">
+                            <h4><b>Custom Filters</b></h4>
+                            <div class="row">
+                                <input class="filterinput" type="text" ng-model="vm.name" placeholder="Filter by names.." title="Type in a name">
+                            </div>
+                            <div class="row">
+                                <input class="filterinput" type="text" ng-model="vm.location" placeholder="Filter by locations.." title="Type in a location">
+                            </div>
+                        </div>
+                        <div class="row" style="text-align: center">
+                            <div class="dropdown col-xs-12">
+                                <button class="dropbtn" ng-click="vm.show=!vm.show;$event.stopPropagation();">Sort&nbsp;&nbsp;<i class="fa fa-sort"></i></i>
+                                </button>
+                                <div class="dropdown-content" ng-show="vm.show">
+                                    <a href="#" ng-click="vm.setSortParams(1);$event.stopPropagation();"><i class="fa fa-sort-amount-asc"></i> &nbsp;&nbsp;Percenatge Funded &nbsp;&nbsp;
+                                 <i class="fa fa-check-square pull-right" ng-if="vm.ascPercentageFunded"></i></a>
+                                    <a href="#" ng-click="vm.setSortParams(2);$event.stopPropagation();"><i class="fa fa-sort-amount-desc"></i> &nbsp;&nbsp;Percenatge Funded &nbsp;&nbsp;
+
+                                 <i class="fa fa-check-square pull-right" ng-if="vm.descPercentageFunded"></i></a>
+                                    <a href="#" ng-click="vm.setSortParams(3);$event.stopPropagation();"><i class="fa fa-sort-amount-asc"></i> &nbsp;&nbsp;End Time &nbsp;&nbsp;  <i class="fa fa-check-square pull-right" ng-if="vm.ascEndTime"></i></a>
+                                    <a href="#" ng-click="vm.setSortParams(4);$event.stopPropagation();"><i class="fa fa-sort-amount-desc"></i> &nbsp;&nbsp;End Time &nbsp;&nbsp; <i class="fa fa-check-square pull-right" ng-if="vm.descEndTime"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row" style="text-align: center">
+                            <div class="dropdown col-xs-6">
+                                <button class="dropbtn" ng-click="vm.filterList()">Filter List</i>
+                                </button>
+                            </div>
+                            <div class="dropdown col-xs-6">
+                                <button class="dropbtn" ng-click="vm.clearFilter()">Clear Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card m-t-20" style="margin-top:20px">
+                        <div class="container" ng-if="vm.filterLog.length>0">
+                            <h4><b>Filter Logs</b></h4>
+                            <div class="row log">
+                                <div class="col-xs-3 truncate"><b>Name</b></div>
+                                <div class="col-xs-3 truncate"><b>Location</b></div>
+                                <div class="col-xs-3 truncate"><b>Criteria</b></div>
+                                <div class="col-xs-3 truncate"><b>Order</b></div>
+                            </div>
+                            <div class="row log" ng-repeat="item in vm.filterLog">
+                                <div class="col-xs-3 truncate">{{vm.protectedNull(item.nameFilter)}}</div>
+                                <div class="col-xs-3 truncate">{{vm.protectedNull(item.locationFilter)}}</div>
+                                <div class="col-xs-3 truncate">{{vm.protectedNull(item.sort.criteria)}}</div>
+                                <div class="col-xs-3 truncate">{{vm.protectedNull(item.sort.order)}}</div>
+                            </div>
+                        </div>
+                        <div class="container" ng-if="vm.filterLog.length==0">
+                            <h4><b>Filter Logs</b></h4>
+                            <b>No Filters Applied Yet...</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <ul class="myUL">
+                        <li ng-class="{'list-item': true, red: $index === 4}" ng-repeat="item in vm.showList">
+                            <a>
+                                <div><i class="fa fa-book"></i>&nbsp;&nbsp;{{item.title}}
+                                    <div class="pull-right"><i class="fa fa-calendar"></i>&nbsp;&nbsp;{{vm.getDate(item['end.time'])}}</div>
+                                </div>
+                                <div><i class="fa fa-map-marker"></i>&nbsp;&nbsp;{{item['location']}}</div>
+                                <div><i class="fa fa-percent"></i>&nbsp;&nbsp;{{item['percentage.funded']}}</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
