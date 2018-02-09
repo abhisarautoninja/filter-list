@@ -6,18 +6,12 @@
 
 ```
 # clone the repo
-$ git clone https://github.com/abhisarautoninja/myapp.git 
+$ git clone https://github.com/abhisarautoninja/filter-list.git 
 
 # change directory to your app
-$ cd myapp
+$ cd filter-list
 
-# install the dependencies with npm
-$ npm install
-
-# start the server
-$ npm start
-
-$ go to [http://localhost:8080](http://localhost:8080) in your browser.
+open list-filter.html
 ```
 ### Auto Complete feature
 ![Alt text](https://raw.github.com/abhisarautoninja/filter-list/master/autocomp.png?raw=true "Optional Title")
